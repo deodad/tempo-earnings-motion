@@ -66,16 +66,16 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
 .motion-track{transform:translateX(0);transition:transform .95s cubic-bezier(.55,0,.25,1)}
 .motion-layer.has-shifted .motion-track{transform:translateX(-200px)}
 .motion-field.is-resetting .motion-track{transition:none}
-.motion-layer .pulse-core,.motion-layer .pulse-ring,.motion-layer .arrival-ring{opacity:0;animation:none}
-.motion-layer.is-live .pulse-core{animation:core 2.4s ease-in-out infinite}
-.motion-layer.is-live .pulse-ring{animation:ring 2.4s ease-out infinite}
-.motion-layer.is-live .arrival-ring{animation:arrival .7s ease-out 1 both}
-.arrival-ring{fill:none;stroke:#13a963;stroke-width:1.6;transform-box:fill-box;transform-origin:center}
-@keyframes arrival{0%{transform:scale(.5);opacity:.9}100%{transform:scale(3);opacity:0}}
+.motion-layer .pulse-core,.motion-layer .pulse-ring{opacity:0;animation:none}
+.motion-layer .pulse-ring{stroke-width:.8}
+.motion-layer.is-live .pulse-core{animation:quiet-core 2.8s ease-in-out infinite}
+.motion-layer.is-live .pulse-ring{animation:quiet-ring 2.8s ease-out infinite}
+@keyframes quiet-core{0%,100%{opacity:.3}50%{opacity:.65}}
+@keyframes quiet-ring{0%{transform:scale(.8);opacity:.3}75%,100%{transform:scale(1.35);opacity:0}}
 @keyframes ring{0%{transform:scale(.45);opacity:.7}75%{transform:scale(1.7);opacity:0}100%{transform:scale(1.7);opacity:0}}
 @keyframes core{0%,100%{opacity:.2}45%{opacity:.85}}
 @media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}.timing{margin-top:56px}.motion-studies{margin-top:64px}.motion-card{padding:16px}.motion-heading{gap:8px}.motion-readout{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}.motion-track{transition:none}.motion-layer.is-live .pulse-core,.motion-layer.is-live .pulse-ring,.motion-layer.is-live .arrival-ring{animation:none}.motion-layer.is-live .pulse-core{opacity:.65}.motion-layer.is-live .pulse-ring{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}.motion-track{transition:none}.motion-layer.is-live .pulse-core,.motion-layer.is-live .pulse-ring{animation:none}.motion-layer.is-live .pulse-core{opacity:.65}.motion-layer.is-live .pulse-ring{opacity:.2}}
 </style>
 </head>
 <body>
@@ -218,10 +218,10 @@ function makeLayer(svg) {
     fragment.append(circle);
     nodes.push(circle);
   }
-  const pulse = ['pulse-core', 'pulse-ring', 'arrival-ring'].map(name => {
+  const pulse = ['pulse-core', 'pulse-ring'].map(name => {
     const circle = document.createElementNS(svgNS, 'circle');
     circle.setAttribute('class', name);
-    circle.setAttribute('r', name === 'pulse-core' ? 2.2 : 6);
+    circle.setAttribute('r', name === 'pulse-core' ? 2.2 : 4);
     fragment.append(circle);
     return circle;
   });
