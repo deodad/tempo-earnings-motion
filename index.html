@@ -61,11 +61,11 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
 .motion-readout{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:14px;line-height:1.4;color:#707070}
 .motion-readout strong{font-weight:500;color:#000;font-variant-numeric:tabular-nums}
 .motion-readout .motion-earned{font-size:20px}
-.motion-field{position:relative;width:100%;aspect-ratio:3/1;margin:10px 0 0}
-.motion-layer{position:absolute;inset:0;width:100%;height:100%;padding:0 10px;transition:opacity .48s ease,transform .48s cubic-bezier(.2,.8,.2,1)}
-.motion-layer.next{opacity:0;transform:scale(.96)}
-.motion-layer.next.is-visible{opacity:1;transform:scale(1)}
-.motion-layer.is-exiting{opacity:0;transform:scale(1.04)}
+.motion-field{position:relative;width:100%;aspect-ratio:3/1;margin:10px 0 0;overflow:hidden}
+.motion-layer{position:absolute;inset:0;width:100%;height:100%;padding:0 10px}
+.motion-track{transform:translateX(0);transition:transform .95s cubic-bezier(.55,0,.25,1)}
+.motion-layer.has-shifted .motion-track{transform:translateX(-200px)}
+.motion-field.is-resetting .motion-track{transition:none}
 .motion-layer .pulse-core,.motion-layer .pulse-ring,.motion-layer .arrival-ring{opacity:0;animation:none}
 .motion-layer.is-live .pulse-core{animation:core 2.4s ease-in-out infinite}
 .motion-layer.is-live .pulse-ring{animation:ring 2.4s ease-out infinite}
@@ -75,7 +75,7 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
 @keyframes ring{0%{transform:scale(.45);opacity:.7}75%{transform:scale(1.7);opacity:0}100%{transform:scale(1.7);opacity:0}}
 @keyframes core{0%,100%{opacity:.2}45%{opacity:.85}}
 @media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}.timing{margin-top:56px}.motion-studies{margin-top:64px}.motion-card{padding:16px}.motion-heading{gap:8px}.motion-readout{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}.motion-layer{transition:none}.motion-layer.is-live .pulse-core,.motion-layer.is-live .pulse-ring,.motion-layer.is-live .arrival-ring{animation:none}.motion-layer.is-live .pulse-core{opacity:.65}.motion-layer.is-live .pulse-ring{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}.motion-track{transition:none}.motion-layer.is-live .pulse-core,.motion-layer.is-live .pulse-ring,.motion-layer.is-live .arrival-ring{animation:none}.motion-layer.is-live .pulse-core{opacity:.65}.motion-layer.is-live .pulse-ring{opacity:.35}}
 </style>
 </head>
 <body>
@@ -127,7 +127,7 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
     <div class="motion-top"><div class="motion-heading"><span class="motion-number">02</span><h3>Cross a milestone</h3></div><button class="motion-play" type="button" aria-label="Play milestone crossing animation">Play</button></div>
     <p class="motion-scenario">Last seen $4.82 → now $5.17</p>
     <div class="motion-readout"><span>Earned <strong class="motion-earned">$4.82</strong></span><span>Next earning milestone <strong class="motion-target">$5</strong></span></div>
-    <div class="motion-field"><svg class="motion-layer" viewBox="0 0 480 160" role="img" aria-label="$4.82 earned toward $5"></svg><svg class="motion-layer next" viewBox="0 0 480 160" role="img" aria-label="$5 earned toward $10" aria-hidden="true"></svg></div>
+    <div class="motion-field"><svg class="motion-layer crossing-layer" viewBox="0 0 480 160" role="img" aria-label="$4.82 earned toward $5"></svg></div>
   </article>
 </section>
 </main>
@@ -186,9 +186,30 @@ render();
 const svgNS = 'http://www.w3.org/2000/svg';
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 function makeLayer(svg) {
+  const crossing = svg.classList.contains('crossing-layer');
+  const track = document.createElementNS(svgNS, 'g');
+  track.setAttribute('class', 'motion-track');
+  if (crossing) {
+    const defs = document.createElementNS(svgNS, 'defs');
+    const clip = document.createElementNS(svgNS, 'clipPath');
+    clip.setAttribute('id', 'milestone-window');
+    const rect = document.createElementNS(svgNS, 'rect');
+    rect.setAttribute('x', 40);
+    rect.setAttribute('y', 24);
+    rect.setAttribute('width', 400);
+    rect.setAttribute('height', 136);
+    clip.append(rect);
+    defs.append(clip);
+    const viewport = document.createElementNS(svgNS, 'g');
+    viewport.setAttribute('clip-path', 'url(#milestone-window)');
+    viewport.append(track);
+    svg.append(defs, viewport);
+  } else {
+    svg.append(track);
+  }
   const nodes = [];
   const fragment = document.createDocumentFragment();
-  for (let index = 0; index < 1000; index++) {
+  for (let index = 0; index < (crossing ? 1500 : 1000); index++) {
     const circle = document.createElementNS(svgNS, 'circle');
     circle.setAttribute('class', 'point empty');
     circle.setAttribute('cx', 43 + Math.floor(index / 20) * 8);
@@ -204,11 +225,11 @@ function makeLayer(svg) {
     fragment.append(circle);
     return circle;
   });
-  svg.append(fragment);
+  track.append(fragment);
   return {svg, nodes, pulse, count:0};
 }
 function fillLayer(layer, count) {
-  count = Math.max(0, Math.min(1000, count));
+  count = Math.max(0, Math.min(layer.nodes.length, count));
   for (let index = Math.min(layer.count, count); index < Math.max(layer.count, count); index++) {
     layer.nodes[index].classList.toggle('filled', index < count);
     layer.nodes[index].classList.toggle('empty', index >= count);
@@ -231,7 +252,7 @@ function tween(study, from, to, duration, update, done) {
   const start = performance.now();
   function frame(now) {
     const t = Math.min(1, (now - start) / duration);
-    const eased = 1 - Math.pow(1 - t, 5);
+    const eased = (1 - Math.cos(Math.PI * t)) / 2;
     update(from + (to - from) * eased);
     if (t < 1) study.frame = requestAnimationFrame(frame);
     else { study.frame = 0; done(); }
@@ -245,6 +266,7 @@ function later(study, duration, action) {
 const studies = Array.from(document.querySelectorAll('[data-study]')).map(card => {
   const layers = Array.from(card.querySelectorAll('.motion-layer')).map(makeLayer);
   const study = {card, layers, frame:0, timers:[]};
+  const motionField = card.querySelector('.motion-field');
   const earned = card.querySelector('.motion-earned');
   const target = card.querySelector('.motion-target');
   const button = card.querySelector('.motion-play');
@@ -253,19 +275,16 @@ const studies = Array.from(document.querySelectorAll('[data-study]')).map(card =
     cancelAnimationFrame(study.frame);
     study.timers.forEach(clearTimeout);
     study.timers = [];
-    for (const layer of layers) layer.svg.classList.remove('is-live', 'is-exiting', 'is-visible');
+    motionField.classList.add('is-resetting');
+    for (const layer of layers) layer.svg.classList.remove('is-live', 'has-shifted');
     fillLayer(layers[0], crossing ? 964 : 834);
-    if (crossing) fillLayer(layers[1], 500);
+    void motionField.offsetWidth;
+    motionField.classList.remove('is-resetting');
     earned.textContent = crossing ? '$4.82' : '$4.17';
     target.textContent = '$5';
     button.textContent = 'Play';
     button.setAttribute('aria-label', crossing ? 'Play milestone crossing animation' : 'Play catch-up animation');
     layers[0].svg.setAttribute('aria-label', crossing ? '$4.82 earned toward $5' : '$4.17 earned toward $5');
-    layers[0].svg.setAttribute('aria-hidden', 'false');
-    if (crossing) {
-      layers[1].svg.setAttribute('aria-label', '$5 earned toward $10');
-      layers[1].svg.setAttribute('aria-hidden', 'true');
-    }
   }
   button.addEventListener('click', () => {
     reset();
@@ -282,22 +301,22 @@ const studies = Array.from(document.querySelectorAll('[data-study]')).map(card =
       first.svg.setAttribute('aria-label', `${formatMoney(firstEnd)} earned toward $5`);
       pulseAt(first, crossing ? 999 : 972);
       if (!crossing) return;
-      later(study, 280, () => {
+      later(study, 520, () => {
         first.svg.classList.remove('is-live');
-        first.svg.classList.add('is-exiting');
-        layers[1].svg.classList.add('is-visible');
-        first.svg.setAttribute('aria-hidden', 'true');
-        layers[1].svg.setAttribute('aria-hidden', 'false');
-        target.textContent = '$10';
+        first.svg.classList.add('has-shifted');
+        later(study, 475, () => {
+          target.textContent = '$10';
+          first.svg.setAttribute('aria-label', '$5 earned toward $10');
+        });
+        later(study, 950, () => tween(study, 5, 5.17, 1050, value => {
+          earned.textContent = formatMoney(value);
+          fillLayer(first, 1000 + Math.round((value - 5) / 10 * 1000));
+        }, () => {
+          earned.textContent = '$5.17';
+          first.svg.setAttribute('aria-label', '$5.17 earned toward $10');
+          pulseAt(first, 1017);
+        }));
       });
-      later(study, 800, () => tween(study, 5, 5.17, 1050, value => {
-        earned.textContent = formatMoney(value);
-        fillLayer(layers[1], Math.round(value / 10 * 1000));
-      }, () => {
-        earned.textContent = '$5.17';
-        layers[1].svg.setAttribute('aria-label', '$5.17 earned toward $10');
-        pulseAt(layers[1], 517);
-      }));
     }));
   });
   reset();
