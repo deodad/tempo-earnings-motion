@@ -46,10 +46,36 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
 .timing th:first-child,.timing td:first-child{text-align:left;padding-left:0}
 .timing tbody th{font-weight:500}
 .timing tbody tr:last-child th,.timing tbody tr:last-child td{border-bottom:0}
+.motion-studies{width:min(100%,720px);margin-top:88px}
+.motion-studies h2{font-size:24px;line-height:1.2;font-weight:500;letter-spacing:-.025em;margin:0 0 8px}
+.motion-intro{font-size:14px;line-height:1.5;color:#707070;margin:0 0 24px}
+.motion-card{background:#fff;border:1px solid #e0e0e0;border-radius:18px;padding:24px;margin-top:16px;overflow:hidden}
+.motion-top{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.motion-heading{display:flex;align-items:baseline;gap:12px}
+.motion-number{font-size:13px;color:#888;font-variant-numeric:tabular-nums}
+.motion-card h3{font-size:18px;line-height:1.3;font-weight:500;letter-spacing:-.02em;margin:0}
+.motion-play{font:500 14px/1 'Inter Display',Inter,Arial,sans-serif;color:#fff;background:#000;border:0;border-radius:999px;min-width:82px;min-height:40px;padding:0 18px;cursor:pointer}
+.motion-play:hover{background:#333}
+.motion-play:focus-visible{outline:2px solid #13a963;outline-offset:3px}
+.motion-scenario{font-size:13px;line-height:1.4;color:#707070;margin:9px 0 20px}
+.motion-readout{display:flex;align-items:baseline;justify-content:space-between;gap:16px;font-size:14px;line-height:1.4;color:#707070}
+.motion-readout strong{font-weight:500;color:#000;font-variant-numeric:tabular-nums}
+.motion-readout .motion-earned{font-size:20px}
+.motion-field{position:relative;width:100%;aspect-ratio:3/1;margin:10px 0 0}
+.motion-layer{position:absolute;inset:0;width:100%;height:100%;padding:0 10px;transition:opacity .48s ease,transform .48s cubic-bezier(.2,.8,.2,1)}
+.motion-layer.next{opacity:0;transform:scale(.96)}
+.motion-layer.next.is-visible{opacity:1;transform:scale(1)}
+.motion-layer.is-exiting{opacity:0;transform:scale(1.04)}
+.motion-layer .pulse-core,.motion-layer .pulse-ring,.motion-layer .arrival-ring{opacity:0;animation:none}
+.motion-layer.is-live .pulse-core{animation:core 2.4s ease-in-out infinite}
+.motion-layer.is-live .pulse-ring{animation:ring 2.4s ease-out infinite}
+.motion-layer.is-live .arrival-ring{animation:arrival .7s ease-out 1 both}
+.arrival-ring{fill:none;stroke:#13a963;stroke-width:1.6;transform-box:fill-box;transform-origin:center}
+@keyframes arrival{0%{transform:scale(.5);opacity:.9}100%{transform:scale(3);opacity:0}}
 @keyframes ring{0%{transform:scale(.45);opacity:.7}75%{transform:scale(1.7);opacity:0}100%{transform:scale(1.7);opacity:0}}
 @keyframes core{0%,100%{opacity:.2}45%{opacity:.85}}
-@media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}.timing{margin-top:56px}}
-@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}}
+@media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}.timing{margin-top:56px}.motion-studies{margin-top:64px}.motion-card{padding:16px}.motion-heading{gap:8px}.motion-readout{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}.motion-layer{transition:none}.motion-layer.is-live .pulse-core,.motion-layer.is-live .pulse-ring,.motion-layer.is-live .arrival-ring{animation:none}.motion-layer.is-live .pulse-core{opacity:.65}.motion-layer.is-live .pulse-ring{opacity:.35}}
 </style>
 </head>
 <body>
@@ -87,6 +113,22 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
       </tbody>
     </table>
   </div>
+</section>
+<section class="motion-studies" aria-labelledby="motion-title">
+  <h2 id="motion-title">On your next visit</h2>
+  <p class="motion-intro">Two ways to catch up from the last point you saw. Play each to compare the motion.</p>
+  <article class="motion-card" data-study="catch-up">
+    <div class="motion-top"><div class="motion-heading"><span class="motion-number">01</span><h3>Catch up</h3></div><button class="motion-play" type="button" aria-label="Play catch-up animation">Play</button></div>
+    <p class="motion-scenario">Last seen $4.17 → now $4.86</p>
+    <div class="motion-readout"><span>Earned <strong class="motion-earned">$4.17</strong></span><span>Next earning milestone <strong class="motion-target">$5</strong></span></div>
+    <div class="motion-field"><svg class="motion-layer" viewBox="0 0 480 160" role="img" aria-label="$4.17 earned toward $5"></svg></div>
+  </article>
+  <article class="motion-card" data-study="crossing">
+    <div class="motion-top"><div class="motion-heading"><span class="motion-number">02</span><h3>Cross a milestone</h3></div><button class="motion-play" type="button" aria-label="Play milestone crossing animation">Play</button></div>
+    <p class="motion-scenario">Last seen $4.82 → now $5.17</p>
+    <div class="motion-readout"><span>Earned <strong class="motion-earned">$4.82</strong></span><span>Next earning milestone <strong class="motion-target">$5</strong></span></div>
+    <div class="motion-field"><svg class="motion-layer" viewBox="0 0 480 160" role="img" aria-label="$4.82 earned toward $5"></svg><svg class="motion-layer next" viewBox="0 0 480 160" role="img" aria-label="$5 earned toward $10" aria-hidden="true"></svg></div>
+  </article>
 </section>
 </main>
 <script>
@@ -140,6 +182,127 @@ function render() {
 }
 slider.addEventListener('input', render);
 render();
+
+const svgNS = 'http://www.w3.org/2000/svg';
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+function makeLayer(svg) {
+  const nodes = [];
+  const fragment = document.createDocumentFragment();
+  for (let index = 0; index < 1000; index++) {
+    const circle = document.createElementNS(svgNS, 'circle');
+    circle.setAttribute('class', 'point empty');
+    circle.setAttribute('cx', 43 + Math.floor(index / 20) * 8);
+    circle.setAttribute('cy', 28 + index % 20 * 6.6);
+    circle.setAttribute('r', 2.2);
+    fragment.append(circle);
+    nodes.push(circle);
+  }
+  const pulse = ['pulse-core', 'pulse-ring', 'arrival-ring'].map(name => {
+    const circle = document.createElementNS(svgNS, 'circle');
+    circle.setAttribute('class', name);
+    circle.setAttribute('r', name === 'pulse-core' ? 2.2 : 6);
+    fragment.append(circle);
+    return circle;
+  });
+  svg.append(fragment);
+  return {svg, nodes, pulse, count:0};
+}
+function fillLayer(layer, count) {
+  count = Math.max(0, Math.min(1000, count));
+  for (let index = Math.min(layer.count, count); index < Math.max(layer.count, count); index++) {
+    layer.nodes[index].classList.toggle('filled', index < count);
+    layer.nodes[index].classList.toggle('empty', index >= count);
+  }
+  layer.count = count;
+}
+function pulseAt(layer, index) {
+  const x = 43 + Math.floor(index / 20) * 8;
+  const y = 28 + index % 20 * 6.6;
+  layer.svg.classList.remove('is-live');
+  for (const circle of layer.pulse) {
+    circle.setAttribute('cx', x);
+    circle.setAttribute('cy', y);
+  }
+  void layer.svg.getBoundingClientRect();
+  layer.svg.classList.add('is-live');
+}
+function tween(study, from, to, duration, update, done) {
+  if (reducedMotion.matches) { update(to); done(); return; }
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 5);
+    update(from + (to - from) * eased);
+    if (t < 1) study.frame = requestAnimationFrame(frame);
+    else { study.frame = 0; done(); }
+  }
+  study.frame = requestAnimationFrame(frame);
+}
+function later(study, duration, action) {
+  if (reducedMotion.matches) { action(); return; }
+  study.timers.push(setTimeout(action, duration));
+}
+const studies = Array.from(document.querySelectorAll('[data-study]')).map(card => {
+  const layers = Array.from(card.querySelectorAll('.motion-layer')).map(makeLayer);
+  const study = {card, layers, frame:0, timers:[]};
+  const earned = card.querySelector('.motion-earned');
+  const target = card.querySelector('.motion-target');
+  const button = card.querySelector('.motion-play');
+  const crossing = card.dataset.study === 'crossing';
+  function reset() {
+    cancelAnimationFrame(study.frame);
+    study.timers.forEach(clearTimeout);
+    study.timers = [];
+    for (const layer of layers) layer.svg.classList.remove('is-live', 'is-exiting', 'is-visible');
+    fillLayer(layers[0], crossing ? 964 : 834);
+    if (crossing) fillLayer(layers[1], 500);
+    earned.textContent = crossing ? '$4.82' : '$4.17';
+    target.textContent = '$5';
+    button.textContent = 'Play';
+    button.setAttribute('aria-label', crossing ? 'Play milestone crossing animation' : 'Play catch-up animation');
+    layers[0].svg.setAttribute('aria-label', crossing ? '$4.82 earned toward $5' : '$4.17 earned toward $5');
+    layers[0].svg.setAttribute('aria-hidden', 'false');
+    if (crossing) {
+      layers[1].svg.setAttribute('aria-label', '$5 earned toward $10');
+      layers[1].svg.setAttribute('aria-hidden', 'true');
+    }
+  }
+  button.addEventListener('click', () => {
+    reset();
+    button.textContent = 'Replay';
+    button.setAttribute('aria-label', crossing ? 'Replay milestone crossing animation' : 'Replay catch-up animation');
+    const first = layers[0];
+    const startAmount = crossing ? 4.82 : 4.17;
+    const firstEnd = crossing ? 5 : 4.86;
+    later(study, 120, () => tween(study, startAmount, firstEnd, crossing ? 1400 : 2100, value => {
+      earned.textContent = formatMoney(value);
+      fillLayer(first, Math.round(value / 5 * 1000));
+    }, () => {
+      earned.textContent = formatMoney(firstEnd);
+      first.svg.setAttribute('aria-label', `${formatMoney(firstEnd)} earned toward $5`);
+      pulseAt(first, crossing ? 999 : 972);
+      if (!crossing) return;
+      later(study, 280, () => {
+        first.svg.classList.remove('is-live');
+        first.svg.classList.add('is-exiting');
+        layers[1].svg.classList.add('is-visible');
+        first.svg.setAttribute('aria-hidden', 'true');
+        layers[1].svg.setAttribute('aria-hidden', 'false');
+        target.textContent = '$10';
+      });
+      later(study, 800, () => tween(study, 5, 5.17, 1050, value => {
+        earned.textContent = formatMoney(value);
+        fillLayer(layers[1], Math.round(value / 10 * 1000));
+      }, () => {
+        earned.textContent = '$5.17';
+        layers[1].svg.setAttribute('aria-label', '$5.17 earned toward $10');
+        pulseAt(layers[1], 517);
+      }));
+    }));
+  });
+  reset();
+  return study;
+});
 </script>
 </body>
 </html>
