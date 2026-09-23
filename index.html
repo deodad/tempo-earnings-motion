@@ -36,9 +36,19 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
 .range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border:4px solid #fff;border-radius:50%;background:#000;box-shadow:0 1px 6px #0003}
 .range::-moz-range-thumb{width:14px;height:14px;border:4px solid #fff;border-radius:50%;background:#000;box-shadow:0 1px 6px #0003}
 .range:focus-visible{outline:2px solid #000;outline-offset:2px;border-radius:8px}
+.timing{width:min(100%,720px);margin-top:72px}
+.timing h2{font-size:24px;line-height:1.2;font-weight:500;letter-spacing:-.025em;margin:0 0 8px}
+.timing-note{font-size:14px;line-height:1.5;color:#707070;margin:0 0 20px}
+.timing-scroll{overflow-x:auto}
+.timing table{width:100%;min-width:580px;border-collapse:collapse;font-size:14px;line-height:1.4;font-variant-numeric:tabular-nums;text-align:right}
+.timing th,.timing td{padding:12px 10px;border-bottom:1px solid #e0e0e0;white-space:nowrap}
+.timing thead th{font-weight:400;color:#707070}
+.timing th:first-child,.timing td:first-child{text-align:left;padding-left:0}
+.timing tbody th{font-weight:500}
+.timing tbody tr:last-child th,.timing tbody tr:last-child td{border-bottom:0}
 @keyframes ring{0%{transform:scale(.45);opacity:.7}75%{transform:scale(1.7);opacity:0}100%{transform:scale(1.7);opacity:0}}
 @keyframes core{0%,100%{opacity:.2}45%{opacity:.85}}
-@media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}}
+@media(max-width:700px){.page{padding:24px 16px 48px}.logo{width:118px;height:auto}.header-note{font-size:11px}h1{margin:55px 0 30px}.milestone{font-size:14px;margin-bottom:22px}.controls{margin-top:24px}.timing{margin-top:56px}}
 @media(prefers-reduced-motion:reduce){.pulse-core,.pulse-ring{animation:none}.pulse-core{opacity:.65}.pulse-ring{opacity:.35}}
 </style>
 </head>
@@ -58,6 +68,24 @@ h1{font-size:clamp(36px,4.4vw,64px);font-weight:500;letter-spacing:-.045em;line-
   <div class="controls">
     <label for="amount"><span>Earnings</span><output id="amount-output" for="amount">$4.17</output></label>
     <input class="range" id="amount" type="range" min="0" max="25" step="0.01" value="4.17" aria-label="Earnings amount from zero to twenty-five dollars">
+  </div>
+</section>
+<section class="timing" aria-labelledby="timing-title">
+  <h2 id="timing-title">Time to each milestone</h2>
+  <p class="timing-note">At 7% APY, from $0 earned. Starting balance stays invested; earnings are reinvested.</p>
+  <div class="timing-scroll" role="region" aria-label="Milestone timing by starting balance" tabindex="0">
+    <table>
+      <thead><tr><th scope="col">Earned</th><th scope="col">$100</th><th scope="col">$1,000</th><th scope="col">$5,000</th><th scope="col">$25,000</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">$1</th><td>54 days</td><td>5.4 days</td><td>1.1 days</td><td>5.2 hours</td></tr>
+        <tr><th scope="row">$2</th><td>107 days</td><td>10.8 days</td><td>2.2 days</td><td>10.4 hours</td></tr>
+        <tr><th scope="row">$3</th><td>159 days</td><td>16.2 days</td><td>3.2 days</td><td>15.5 hours</td></tr>
+        <tr><th scope="row">$5</th><td>263 days</td><td>26.9 days</td><td>5.4 days</td><td>1.1 days</td></tr>
+        <tr><th scope="row">$10</th><td>1.4 years</td><td>54 days</td><td>10.8 days</td><td>2.2 days</td></tr>
+        <tr><th scope="row">$15</th><td>2.1 years</td><td>80 days</td><td>16.2 days</td><td>3.2 days</td></tr>
+        <tr><th scope="row">$25</th><td>3.3 years</td><td>133 days</td><td>26.9 days</td><td>5.4 days</td></tr>
+      </tbody>
+    </table>
   </div>
 </section>
 </main>
