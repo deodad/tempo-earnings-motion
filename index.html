@@ -252,7 +252,7 @@ function tween(study, from, to, duration, update, done) {
   const start = performance.now();
   function frame(now) {
     const t = Math.min(1, (now - start) / duration);
-    const eased = (1 - Math.cos(Math.PI * t)) / 2;
+    const eased = t * t * t * (t * (t * 6 - 15) + 10);
     update(from + (to - from) * eased);
     if (t < 1) study.frame = requestAnimationFrame(frame);
     else { study.frame = 0; done(); }
@@ -293,7 +293,7 @@ const studies = Array.from(document.querySelectorAll('[data-study]')).map(card =
     const first = layers[0];
     const startAmount = crossing ? 4.82 : 4.17;
     const firstEnd = crossing ? 5 : 4.86;
-    later(study, 120, () => tween(study, startAmount, firstEnd, crossing ? 1400 : 2100, value => {
+    later(study, 40, () => tween(study, startAmount, firstEnd, crossing ? 2400 : 3400, value => {
       earned.textContent = formatMoney(value);
       fillLayer(first, Math.round(value / 5 * 1000));
     }, () => {
@@ -308,7 +308,7 @@ const studies = Array.from(document.querySelectorAll('[data-study]')).map(card =
           target.textContent = '$10';
           first.svg.setAttribute('aria-label', '$5 earned toward $10');
         });
-        later(study, 950, () => tween(study, 5, 5.17, 1050, value => {
+        later(study, 950, () => tween(study, 5, 5.17, 1800, value => {
           earned.textContent = formatMoney(value);
           fillLayer(first, 1000 + Math.round((value - 5) / 10 * 1000));
         }, () => {
